@@ -37,7 +37,8 @@ packages = ['objectstore']
 
 # Why are you so precise about the versions here? --PvB
 requires = [
-   'python-swiftclient'
+   'python-swiftclient',
+   'datapunt-config-loader',
 ]
 
 requires_test = []
