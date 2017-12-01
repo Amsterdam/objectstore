@@ -24,7 +24,7 @@ EXAXMPLE:
     use this connection in below methods
 """
 
-# import os
+import os
 import datetime
 import argparse
 import logging
@@ -38,6 +38,7 @@ from dateutil import parser as dateparser
 log = logging.getLogger(__name__)
 
 DUMPFOLDER = '/tmp/backups/'
+ENV = os.getenv('ENVIRONMENT', 'ACCEPTANCE')
 
 
 def upload_database(connection, container: str, location: str):

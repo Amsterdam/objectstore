@@ -23,41 +23,31 @@ GitHub <https://github.com/DatapuntAmsterdam/objectstore>`_ or file an issue at 
 
 .. code-block:: bash
 
-    $ pip install -e .[dev]
+    $ pip install --upgrade setuptools
+    $ python setup.py install develop
 
-Note: the ``[dev]`` refers to extra requirements for development and is
-specified in ``setup.py``. You don't need to install them as the ``make test``
-and ``make coverage`` targets work fine without having them in the virtualenv.
-The only reason you might want to install them is so for example ``pytest`` and
-``responses`` can be resolved in you IDE.
+The `setuptools` pakage must be upgraded (as shown above) because the version
+that is pre-packaged with Python 3.6 causes problems when running the tests.
 
-2. Create a configuration or environment file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2. Run the tests
+^^^^^^^^^^^^^^^^
 
-In ``config.yml`` you can see an example configuration. You can either:
+The test suite and test coverage are run as follows:
 
-- make a copy of ``config.yml``, adjust it to your needs and point to it using
-  export OBJECTSTORE_CONFIG=`pwd`/my_config.yml
-- or export values for the environment variables referenced in ``config.yml``.
+.. code-block:: bash
 
-3. Download the Internet! (by example)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    $ python setup.py test
 
-Look in the ``examples`` folder to see example usage.
+The Python style checker Flake8 can be run as follows:
 
-::
+.. code-block:: bash
 
- 	$ todo!
+    $ python setup.py flake8
 
-Work in progress
 
-::
+3. Example configuration and usage
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- 	$ todo
+TODO
 
-Now you can develop, run and test code!
 
-4. Make awesome visualizations with the data downloaded.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-THAT IS YOUR JOB!

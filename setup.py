@@ -2,11 +2,13 @@
 
 import sys
 
-from codecs import open
+import codecs
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
+
+# https://docs.pytest.org/en/latest/goodpractices.html
 
 class PyTest(TestCommand):
     """ Custom class to avoid depending on pytest-runner.
@@ -15,7 +17,7 @@ class PyTest(TestCommand):
 
     def initialize_options(self):
         TestCommand.initialize_options(self)
-        self.pytest_args = []
+        self.pytest_args = ['--cov', 'objectstore']
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -28,20 +30,23 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
-with open('README.rst', encoding='utf-8') as f:
+
+with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 version = '2017.10.1'
 
 packages = ['objectstore']
 
-# Why are you so precise about the versions here? --PvB
 requires = [
-   'python-swiftclient',
-   'datapunt-config-loader',
+    'python-swiftclient',
+    'datapunt-config-loader',
 ]
 
-requires_test = []
+requires_test = [
+    'pytest',
+    'pytest-cov',
+]
 
 requires_extras = {
     'docs': [
@@ -75,4 +80,5 @@ setup(
     install_requires=requires,
     tests_require=requires_test,
     extras_require=requires_extras,
+    setup_requires=['flake8'],
 )
