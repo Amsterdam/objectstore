@@ -41,6 +41,7 @@ packages = ['objectstore']
 requires = [
     'python-swiftclient',
     'datapunt-config-loader',
+    'python-keystoneclient',
 ]
 
 requires_test = [
