@@ -4,7 +4,7 @@ __pycache__
 *.pyo
 .eggs
 *.egg-info
-/.venv
+/venv
 .pylintrc
 *.ipynb
 .ipynb_checkpoints
