@@ -64,7 +64,7 @@ setup(
     description='Datapunt Amsterdam objectstore module',
     long_description=long_description,
     url='https://github.com/amsterdam/objectstore',
-    author='Amsterdam Datapunt',
+    author='Datapunt Amsterdam',
     author_email='datapunt@amsterdam.nl',
     license='Mozilla Public License Version 2.0',
     classifiers=[
