@@ -30,7 +30,9 @@ The `setuptools` pakage must be upgraded (as shown above) because the version
 that is pre-packaged with Python 3.6 causes problems when running the tests.
 
 When you get a PYTHONPATH error, use the install-dir argument:
+
 .. code-block:: bash
+
     $ python setup.py install develop --install-dir venv/lib/python3.6/site-packages 
 
 2. Run the tests
