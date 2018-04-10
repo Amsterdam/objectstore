@@ -54,14 +54,14 @@ The Python style checker Flake8 can be run as follows:
 3. Example configuration and usage
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: python
+.. code-block:: bash
 
     python -m objecstore.databasedumps /backups/postgres.dump objectstore_dir --upload-db
 
 uploads given dump with a date and environment informtion to objectstore
 
 
-.. code-block:: python
+.. code-block:: bash
 
     python -m objecstore.databasedumps downloaddir objectstore_dir --download-db
 
