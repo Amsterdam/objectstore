@@ -54,6 +54,18 @@ The Python style checker Flake8 can be run as follows:
 3. Example configuration and usage
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+.. code-block:: python
 
+    python -m objecstore.databasedumps /backups/postgres.dump objectstore_dir --upload-db
+
+uploads given dump with a date and environment informtion to objectstore
+
+
+.. code-block:: python
+
+    python -m objecstore.databasedumps downloaddir objectstore_dir --download-db
+
+Dowload latest dump with the name `database.environment.latestdate.dump` from given environmnet 
+with from location directory in objectstore.
+- WILL DELETE OLD DUMPS more then 20 days old.
 
