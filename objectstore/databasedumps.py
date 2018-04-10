@@ -1,9 +1,11 @@
 """
-We use the objectstore to get the latest and greatest of database dump
-assert os.getenv('HANDELSREGISTER_OBJECTSTORE_PASSWORD')
+We use the objectstore to get the latest and greatest of
+database dump
 
 EXAXMPLE:
 ---------
+
+    assert os.getenv('HANDELSREGISTER_OBJECTSTORE_PASSWORD')
 
     ENV = os.getenv('ENVIRONMENT', 'ACCEPTANCE')
     OBJECTSTORE_LOCAL = os.getenv('OBJECTSTORE_LOCAL', '')
@@ -29,7 +31,7 @@ import datetime
 import argparse
 import logging
 
-# import datetime
+import datetime
 # import connection
 import objectstore
 from dateutil import parser as dateparser
@@ -48,16 +50,18 @@ def upload_database(connection, container: str, location: str):
     else:
         dump = open(f'{DUMPFOLDER}/database.dump', 'rb')
 
+    date = f"{datetime.datetime.now():%Y%m%d}"
+
     objectstore.put_object(
         connection,
-        f'{container}/database',
-        f'database.{ENV}.dump',
+        f'{container}',
+        f'database.{ENV}.{date}.dump',
         # contents=dump.read(),
         contents=dump,
         content_type='application/octet-stream')
 
 
-def download_database(connection, container: str, ):
+def download_database(connection, container: str, target: str=""):
     """
     Download database dump
     """
@@ -65,9 +69,11 @@ def download_database(connection, container: str, ):
     meta_data = objectstore.get_full_container_list(
         connection, container, prefix='database')
 
+    options = []
+
     for o_info in meta_data:
-        expected_file = f'database.{ENV}.dump'
-        if o_info['name'].endswith(expected_file):
+        expected_file = f'database.{ENV}'
+        if o_info['name'].startswith(expected_file):
             dt = dateparser.parse(o_info['last_modified'])
             now = datetime.datetime.now()
 
@@ -75,25 +81,49 @@ def download_database(connection, container: str, ):
 
             log.debug('AGE: %d %s', delta.days, expected_file)
 
-            log.debug('Downloading: %s', (expected_file))
+            if delta.days > 20:
+                objectstore.delete_object(connection, container, o_info)
 
-            new_data = objectstore.get_object(
-                connection, o_info, container)
+            options.append((dt, o_info))
+
+        options.sort()
+        newest = options[-1][1]
+
+        log.debug('Downloading: %s', (expected_file))
+
+        new_data = objectstore.get_object(connection, newest, container)
 
         # save output to file!
-        with open('data/{}'.format(expected_file), 'wb') as outputzip:
+        target_file = os.path.join(target, expected_file)
+        with open(target_file, 'wb') as outputzip:
             outputzip.write(new_data)
 
 
 def run(connection):
+    """
+    Parse arguments and start upload/download
+    """
 
-    parser = argparse.ArgumentParser(description='Process database dumps.')
+    parser = argparse.ArgumentParser(description="""
+    Process database dumps.
+
+    Either download of upload a dump file to the objectstore.
+
+    downloads the latest dump and uploads with envronment and date
+    into given container destination
+    """)
 
     parser.add_argument(
         'location',
-        nargs='*',
+        nargs=1,
         default=f'{DUMPFOLDER}/database.{ENV}.dump',
         help="Dump file location")
+
+    parser.add_argument(
+        'objectstore',
+        nargs=1,
+        default=f'{DUMPFOLDER}/database.{ENV}.dump',
+        help="Dump file objectstore location")
 
     parser.add_argument(
         '--download-db',
@@ -116,13 +146,16 @@ def run(connection):
         default=False,
         help='Upload db')
 
-    parser.config()
+    args = parser.parse_args()
 
-    if parser.download:
-        download_database(connection, parser.container, parser.location)
-    if parser.upload:
-        upload_database(connection, parser.container, parser.location)
+    if args.download:
+        download_database(connection, args.objectstore[0], args.location[0])
+    elif args.upload:
+        upload_database(connection, args.objectstore[0], args.location[0])
+    else:
+        parser.print_help()
 
 
 if __name__ == '__main__':
-    run()
+    connection = objectstore.get_connection()
+    run(connection)

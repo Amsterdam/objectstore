@@ -46,11 +46,26 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
 
-def get_connection(store_settings: dict) -> Connection:
+def make_config_from_env():
+    OBJECTSTORE = dict(
+       VERSION='2.0',
+       AUTHURL='https://identity.stack.cloudvps.com/v2.0',
+       TENANT_NAME=os.getenv('TENANT_NAME'),
+       TENANT_ID=os.getenv('TENANT_ID'),
+       USER=os.getenv('OBJECTSTORE_USER'),
+       PASSWORD=os.getenv('OBJECTSTORE_PASSWORD'),
+       REGION_NAME='NL',
+    )
+    return OBJECTSTORE
+
+
+def get_connection(store_settings: dict={}) -> Connection:
     """
     get an objectsctore connection
     """
     store = store_settings
+    if not store_settings:
+        store = make_config_from_env()
 
     os_options = {
         'tenant_id': store['TENANT_ID'],
@@ -119,3 +134,10 @@ def put_object(
     connection.put_object(
         container, object_name, contents=contents,
         content_type=content_type)
+
+
+def delete_object(connection, container: str, object_meta_data: dict) -> None:
+    """
+    Delete single object from objectstore
+    """
+    connection.delete_object(container, object_meta_data['name'])

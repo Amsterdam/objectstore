@@ -1,5 +1,5 @@
 """
-We use the objectstore to get the latest and greatest of the mks dump
+We use the objectstore to get the latest and greatest dumps
 """
 
 import os
