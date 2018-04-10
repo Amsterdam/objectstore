@@ -41,6 +41,7 @@ packages = ['objectstore']
 requires = [
     'python-swiftclient',
     'datapunt-config-loader',
+    'python-keystoneclient',
 ]
 
 requires_test = [
@@ -62,9 +63,9 @@ setup(
     version=version,
     description='Datapunt Amsterdam objectstore module',
     long_description=long_description,
-    url='https://github.com/DatapuntAmsterdam/objectstore',
-    author='Amsterdam Datapunt',
-    author_email='datapunt.ois@amsterdam.nl',
+    url='https://github.com/amsterdam/objectstore',
+    author='Datapunt Amsterdam',
+    author_email='datapunt@amsterdam.nl',
     license='Mozilla Public License Version 2.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
