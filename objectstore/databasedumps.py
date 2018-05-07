@@ -38,6 +38,8 @@ from dateutil import parser as dateparser
 
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 DUMPFOLDER = '/tmp/backups/'
 ENV = os.getenv('ENVIRONMENT', 'ACCEPTANCE')
@@ -61,15 +63,14 @@ def upload_database(connection, container: str, location: str):
         content_type='application/octet-stream')
 
 
-def download_database(connection, container: str, target: str=""):
+def return_file_objects(connection, container, prefix='database'):
+    """Given connecton and container find database dumps
     """
-    Download database dump
-    """
+
+    options = []
 
     meta_data = objectstore.get_full_container_list(
         connection, container, prefix='database')
-
-    options = []
 
     for o_info in meta_data:
         expected_file = f'database.{ENV}'
@@ -81,22 +82,65 @@ def download_database(connection, container: str, target: str=""):
 
             log.debug('AGE: %d %s', delta.days, expected_file)
 
-            if delta.days > 20:
-                objectstore.delete_object(connection, container, o_info)
-
             options.append((dt, o_info))
 
         options.sort()
-        newest = options[-1][1]
 
-        log.debug('Downloading: %s', (expected_file))
+    return options
 
-        new_data = objectstore.get_object(connection, newest, container)
 
-        # save output to file!
-        target_file = os.path.join(target, expected_file)
-        with open(target_file, 'wb') as outputzip:
-            outputzip.write(new_data)
+def remove_old_dumps(connection, container: str, days=None):
+    """Remove dumps older than x days
+    """
+
+    if not days:
+        return
+
+    if days < 20:
+        log.error('A minimum of 20 backups is stored')
+        return
+
+    options = return_file_objects(connection, container)
+
+    for dt, o_info in options:
+        now = datetime.datetime.now()
+        delta = now - dt
+        if delta.days > days:
+            log.info('Deleting %s', o_info['name'])
+            objectstore.delete_object(connection, container, o_info)
+
+
+def download_database(connection, container: str, target: str=""):
+    """
+    Download database dump
+    """
+
+    meta_data = objectstore.get_full_container_list(
+        connection, container, prefix='database')
+
+    options = []
+
+    options = return_file_objects(connection, container)
+
+    for o_info in meta_data:
+        expected_file = f'database.{ENV}'
+        if o_info['name'].startswith(expected_file):
+            dt = dateparser.parse(o_info['last_modified'])
+            now = datetime.datetime.now()
+            options.append((dt, o_info))
+
+        options.sort()
+
+    newest = options[-1][1]
+
+    log.debug('Downloading: %s', (newest['name']))
+
+    new_data = objectstore.get_object(connection, newest, container)
+
+    # save output to file!
+    target_file = os.path.join(target, expected_file)
+    with open(target_file, 'wb') as outputzip:
+        outputzip.write(new_data)
 
 
 def run(connection):
@@ -146,12 +190,26 @@ def run(connection):
         default=False,
         help='Upload db')
 
+    parser.add_argument(
+        '--days',
+        type=int,
+        nargs=1,
+        dest='days',
+        default=0,
+        help='Days to keep database dumps')
+
     args = parser.parse_args()
 
-    if args.download:
-        download_database(connection, args.objectstore[0], args.location[0])
+    if args.days:
+        log.debug('Cleanup old dumps')
+        remove_old_dumps(
+            connection, args.objectstore[0], args.days[0])
+    elif args.download:
+        download_database(
+            connection, args.objectstore[0], args.location[0])
     elif args.upload:
-        upload_database(connection, args.objectstore[0], args.location[0])
+        upload_database(
+            connection, args.objectstore[0], args.location[0])
     else:
         parser.print_help()
 
