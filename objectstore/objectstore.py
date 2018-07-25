@@ -26,7 +26,7 @@ give example config:
     for file_info in meta_data:
         if file_info['name'].endswith(expected_file):
 
-        log.debug('Downloading: %s', (expected_file))
+        LOG.debug('Downloading: %s', (expected_file))
 
         new_data = objectstore.get_object(
             connection, o_info, container)
@@ -35,10 +35,11 @@ give example config:
 
 import logging
 import os
+# import pprint
 
 from swiftclient.client import Connection
 
-log = logging.getLogger('objectstore')
+LOG = logging.getLogger('objectstore')
 
 
 logging.getLogger("requests").setLevel(logging.WARNING)
@@ -48,14 +49,18 @@ logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
 def make_config_from_env():
     OBJECTSTORE = dict(
-       VERSION='2.0',
-       AUTHURL='https://identity.stack.cloudvps.com/v2.0',
-       TENANT_NAME=os.getenv('TENANT_NAME'),
-       TENANT_ID=os.getenv('TENANT_ID'),
-       USER=os.getenv('OBJECTSTORE_USER'),
-       PASSWORD=os.getenv('OBJECTSTORE_PASSWORD'),
-       REGION_NAME='NL',
+        VERSION='2.0',
+        AUTHURL='https://identity.stack.cloudvps.com/v2.0',
+        TENANT_NAME=os.getenv('TENANT_NAME'),
+        TENANT_ID=os.getenv('TENANT_ID'),
+        USER=os.getenv('OBJECTSTORE_USER'),
+        PASSWORD=os.getenv('OBJECTSTORE_PASSWORD'),
+        REGION_NAME='NL',
     )
+
+    # pp = pprint.PrettyPrinter(6)
+    # LOG.debug(pp.pprint(OBJECTSTORE))
+
     return OBJECTSTORE
 
 
@@ -64,6 +69,7 @@ def get_connection(store_settings: dict={}) -> Connection:
     get an objectsctore connection
     """
     store = store_settings
+
     if not store_settings:
         store = make_config_from_env()
 

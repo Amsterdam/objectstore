@@ -31,14 +31,13 @@ import datetime
 import argparse
 import logging
 
-import datetime
 # import connection
 import objectstore
 from dateutil import parser as dateparser
 
 
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG)
 
 DUMPFOLDER = '/tmp/backups/'
@@ -80,7 +79,7 @@ def return_file_objects(connection, container, prefix='database'):
 
             delta = now - dt
 
-            log.debug('AGE: %d %s', delta.days, expected_file)
+            LOG.debug('AGE: %d %s', delta.days, expected_file)
 
             options.append((dt, o_info))
 
@@ -97,7 +96,7 @@ def remove_old_dumps(connection, container: str, days=None):
         return
 
     if days < 20:
-        log.error('A minimum of 20 backups is stored')
+        LOG.error('A minimum of 20 backups is stored')
         return
 
     options = return_file_objects(connection, container)
@@ -106,7 +105,7 @@ def remove_old_dumps(connection, container: str, days=None):
         now = datetime.datetime.now()
         delta = now - dt
         if delta.days > days:
-            log.info('Deleting %s', o_info['name'])
+            LOG.info('Deleting %s', o_info['name'])
             objectstore.delete_object(connection, container, o_info)
 
 
@@ -126,14 +125,14 @@ def download_database(connection, container: str, target: str=""):
         expected_file = f'database.{ENV}'
         if o_info['name'].startswith(expected_file):
             dt = dateparser.parse(o_info['last_modified'])
-            now = datetime.datetime.now()
+            # now = datetime.datetime.now()
             options.append((dt, o_info))
 
         options.sort()
 
     newest = options[-1][1]
 
-    log.debug('Downloading: %s', (newest['name']))
+    LOG.debug('Downloading: %s', (newest['name']))
 
     new_data = objectstore.get_object(connection, newest, container)
 
@@ -201,7 +200,7 @@ def run(connection):
     args = parser.parse_args()
 
     if args.days:
-        log.debug('Cleanup old dumps')
+        LOG.debug('Cleanup old dumps')
         remove_old_dumps(
             connection, args.objectstore[0], args.days[0])
     elif args.download:
@@ -214,6 +213,10 @@ def run(connection):
         parser.print_help()
 
 
-if __name__ == '__main__':
+def main():
     connection = objectstore.get_connection()
     run(connection)
+
+
+if __name__ == '__main__':
+    main()

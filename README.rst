@@ -9,6 +9,13 @@ Datapunt Objectstore Libary
 
 ---------------------
 
+Objecstore Libary
+-----------------
+
+Contains common used objectstore code for our API's.
+
+During import / ETL tasks we offten use data uploaded to the objecstore
+from data sources.
 
 Contributing
 ------------
@@ -33,7 +40,7 @@ When you get a PYTHONPATH error, use the install-dir argument:
 
 .. code-block:: bash
 
-    $ python setup.py install develop --install-dir venv/lib/python3.6/site-packages 
+    $ python setup.py install develop --install-dir venv/lib/python3.6/site-packages
 
 2. Run the tests
 ^^^^^^^^^^^^^^^^
@@ -65,7 +72,7 @@ uploads given dump with a date and environment informtion to objectstore
 
     python -m objecstore.databasedumps downloaddir objectstore_dir --download-db
 
-Dowload latest dump with the name `database.environment.latestdate.dump` from given environmnet 
+Dowload latest dump with the name `database.environment.latestdate.dump` from given environmnet
 with from location directory in objectstore.
 - WILL DELETE OLD DUMPS more then 20 days old.
 
