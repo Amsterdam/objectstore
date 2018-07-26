@@ -139,8 +139,6 @@ def download_database(connection, container: str, target: str=""):
         LOG.error('Environtment {ENV}')
         sys.exit(1)
 
-    LOG.error(options)
-
     newest = options[-1][1]
 
     LOG.debug('Downloading: %s', (newest['name']))
