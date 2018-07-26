@@ -27,6 +27,7 @@ EXAXMPLE:
 """
 
 import os
+import sys
 import datetime
 import argparse
 import logging
@@ -70,6 +71,8 @@ def return_file_objects(connection, container, prefix='database'):
 
     meta_data = objectstore.get_full_container_list(
         connection, container, prefix='database')
+
+    env = ENV.upper()
 
     for o_info in meta_data:
         expected_file = f'database.{ENV}'
@@ -117,18 +120,26 @@ def download_database(connection, container: str, target: str=""):
     meta_data = objectstore.get_full_container_list(
         connection, container, prefix='database')
 
-    options = []
-
     options = return_file_objects(connection, container)
 
     for o_info in meta_data:
         expected_file = f'database.{ENV}'
+
+        LOG.info(o_info['name'])
+
         if o_info['name'].startswith(expected_file):
             dt = dateparser.parse(o_info['last_modified'])
             # now = datetime.datetime.now()
             options.append((dt, o_info))
 
         options.sort()
+
+    if not options:
+        LOG.error('Dumps missing? ENVIRONMENT wrong? (acceptance / production')
+        LOG.error('Environtment {ENV}')
+        sys.exit(1)
+
+    LOG.error(options)
 
     newest = options[-1][1]
 

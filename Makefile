@@ -12,6 +12,6 @@ build:
 	$(PYTHON) setup.py build
 
 test:
-	$(PYTHON) runtests.py
+	$(PYTHON) setup.py test
 clean:
 	rm -rf dist/*

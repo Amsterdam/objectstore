@@ -55,7 +55,7 @@ requires_extras = {
         'sphinx-autobuild',
         'sphinx-rtd-theme',
     ],
-    'dev': requires_test + ['pylint'],
+    'dev': requires_test + ['pylint', 'twine'],
 }
 
 setup(
@@ -71,10 +71,9 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Natural Language :: English',
-        'Topic :: System :: Backups :: Storage :: Upload/Download',
-        'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
+        'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
     ],
     cmdclass={'test': PyTest},
     packages=packages,
