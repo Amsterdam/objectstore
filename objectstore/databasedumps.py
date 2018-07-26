@@ -143,10 +143,19 @@ def download_database(connection, container: str, target: str=""):
 
     LOG.debug('Downloading: %s', (newest['name']))
 
+    target_file = os.path.join(target, expected_file)
+
+    LOG.info('TARGET: %s', target_file)
+
+    if os.path.exists(target_file):
+        LOG.info('Already downloaded')
+        return
+
+    LOG.error('TARGET does no exists downloading...')
+
     new_data = objectstore.get_object(connection, newest, container)
 
     # save output to file!
-    target_file = os.path.join(target, expected_file)
     with open(target_file, 'wb') as outputzip:
         outputzip.write(new_data)
 
