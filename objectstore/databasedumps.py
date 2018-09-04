@@ -151,7 +151,7 @@ def download_database(connection, container: str, target: str=""):
         LOG.info('Already downloaded')
         return
 
-    LOG.error('TARGET does no exists downloading...')
+    LOG.error('TARGET does not exists downloading...')
 
     new_data = objectstore.get_object(connection, newest, container)
 
