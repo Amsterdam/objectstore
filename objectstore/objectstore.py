@@ -113,8 +113,6 @@ def get_full_container_list(conn, container, **kwargs) -> list:
         for object_info in lastpage:
             yield object_info
 
-    raise StopIteration
-
 
 def get_object(connection, object_meta_data: dict, dirname: str):
     """

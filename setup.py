@@ -34,7 +34,7 @@ class PyTest(TestCommand):
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
-version = '2018.7.26'
+version = '2018.12.10'
 
 packages = ['objectstore']
 
