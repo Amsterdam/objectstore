@@ -134,6 +134,7 @@ def put_object(
     contents=thefiledata (fileobject) open('ourfile', 'rb')
     content_type='csv'  / 'application/json' .. etc
     """
+    print(f"Put object, proxy '{proxy}'")
 
     connection.put_object(
         container, object_name, contents=contents,
