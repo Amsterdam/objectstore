@@ -37,7 +37,7 @@ import logging
 import os
 # import pprint
 
-from swiftclient.client import Connection
+from swiftclient.client import Connection, put_object as write_objectstore
 
 LOG = logging.getLogger('objectstore')
 
@@ -136,11 +136,20 @@ def put_object(
     """
     print(f"Put object, proxy '{proxy}'")
 
-    connection.put_object(
-        container, object_name, contents=contents,
+    # connection.put_object(
+    #     container, object_name, contents=contents,
+    #     content_type=content_type,
+    #     proxy=proxy
+    # )
+
+    connection._retry(
+        reset_func=None,
+        func=write_objectstore,
+        container=container,
+        name=object_name,
+        contents=contents,
         content_type=content_type,
-        proxy=proxy
-    )
+        proxy=proxy)
 
 
 def delete_object(connection, container: str, object_meta_data: dict) -> None:
