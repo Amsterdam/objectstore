@@ -125,7 +125,7 @@ def get_object(connection, object_meta_data: dict, dirname: str):
 
 def put_object(
         connection, container: str, object_name: str,
-        contents, content_type: str) -> None:
+        contents, content_type: str, proxy=None) -> None:
     """
     Put file to objectstore
 
@@ -137,7 +137,9 @@ def put_object(
 
     connection.put_object(
         container, object_name, contents=contents,
-        content_type=content_type)
+        content_type=content_type,
+        proxy=proxy
+    )
 
 
 def delete_object(connection, container: str, object_meta_data: dict) -> None:
