@@ -12,6 +12,10 @@ Datapunt Objectstore Libary
 Objecstore Libary
 -----------------
 
+.. code-block:: bash
+
+    $ pip install datapunt-objectstore
+
 Contains common used objectstore code for our API's.
 
 During import / ETL tasks we offten use data uploaded to the objecstore
