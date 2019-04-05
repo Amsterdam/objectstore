@@ -52,7 +52,7 @@ def upload_database(connection, container: str, location: str):
     else:
         dump = open(f'{DUMPFOLDER}/database.dump', 'rb')
 
-    date = f"{datetime.datetime.now():%Y%m%d}"
+    date = f"{datetime.datetime.now():%Y%m%d-%H%M%S}"
 
     objectstore.put_object(
         connection,
