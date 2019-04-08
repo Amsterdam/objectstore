@@ -3,7 +3,6 @@ import datetime
 import glob
 import logging
 import objectstore
-from databasedumps import upload_database
 import os
 import subprocess
 import sys
@@ -117,7 +116,7 @@ class Archiver(object):
             log.info('Connecting to objectstore')
             connection = objectstore.get_connection()
             log.info('Uploading to objectstore')
-            upload_database(connection, folder, archive)
+            objectstore.databasedumps.upload_database(connection, folder, archive)
             return 0
         except Exception as ex:
             log.error(ex)
