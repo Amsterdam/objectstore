@@ -116,7 +116,7 @@ class Archiver(object):
             log.info('Connecting to objectstore')
             connection = objectstore.get_connection()
             log.info('Uploading to objectstore')
-            objectstore.databasedumps.upload_database(connection, folder, archive)
+            objectstore.upload_database(connection, folder, archive)
             return 0
         except Exception as ex:
             log.error(ex)
