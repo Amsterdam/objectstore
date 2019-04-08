@@ -16,6 +16,22 @@ DEFAULT_TMPFOLDER = '/tmp'
 
 
 class Archiver(object):
+    """
+    Archive specified tables.
+
+    - Dumps postgres sql copy format - data
+    - Dumps schema
+    - zip the resulting archives
+    - upload zip file to objectstore
+    - cleanup tmp files
+    - truncate tables IF ONLY everything was successfull!
+
+    TODO:
+        drop emptied partitions
+
+    NOTE:
+    avoid version conflict because we dump in copy format.
+    """
     def make_stamp(self, dt=None):
         ts = dt if dt else datetime.datetime.now()
         return ts.strftime("%Y%m%d-%H%M%S")
