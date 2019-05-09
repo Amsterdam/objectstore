@@ -25,8 +25,8 @@ Contributing
 ------------
 
 Found a bug or want to work on the code? You can branch the `repository on
-GitHub <https://github.com/DatapuntAmsterdam/objectstore>`_ or file an issue at its
-`issue tracker <https://github.com/DatapuntAmsterdam/objectstore/issues>`_.
+GitHub <https://github.com/Amsterdam/objectstore>`_ or file an issue at its
+`issue tracker <https://github.com/Amsterdam/objectstore/issues>`_.
 
 
 1. Install the dev dependencies in your virtual environment
