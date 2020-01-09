@@ -64,7 +64,7 @@ def make_config_from_env():
     return OBJECTSTORE
 
 
-def get_connection(store_settings: dict={}) -> Connection:
+def get_connection(store_settings: dict = {}) -> Connection:
     """
     get an objectsctore connection
     """
