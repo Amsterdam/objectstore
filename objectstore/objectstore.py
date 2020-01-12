@@ -99,18 +99,16 @@ def get_connection(store_settings: dict = {}) -> Connection:
 def get_full_container_list(conn, container, **kwargs) -> list:
     limit = 10000
     kwargs['limit'] = limit
-    page = []
 
-    _, page = conn.get_container(container, **kwargs)
-    lastpage = page
-    for object_info in lastpage:
+    _, objects = conn.get_container(container, **kwargs)
+    for object_info in objects:
         yield object_info
 
-    while len(lastpage) == limit:
-        # keep getting pages..
-        kwargs['marker'] = lastpage['name']
-        _, lastpage = conn.get_container(container, **kwargs)
-        for object_info in lastpage:
+    while len(objects) == limit:
+        # keep getting objects..
+        kwargs['marker'] = objects[-1]['name']
+        _, objects = conn.get_container(container, **kwargs)
+        for object_info in objects:
             yield object_info
 
 
