@@ -100,12 +100,14 @@ def get_full_container_list(conn, container, **kwargs) -> list:
     limit = 10000
     kwargs['limit'] = limit
 
+    # fetch first limit number of objects
     _, objects = conn.get_container(container, **kwargs)
     for object_info in objects:
         yield object_info
 
+    # continue to fetch next limit number of objects
+    # until all objects will be fetched
     while len(objects) == limit:
-        # keep getting objects..
         kwargs['marker'] = objects[-1]['name']
         _, objects = conn.get_container(container, **kwargs)
         for object_info in objects:
