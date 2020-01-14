@@ -64,7 +64,7 @@ def make_config_from_env():
     return OBJECTSTORE
 
 
-def get_connection(store_settings: dict={}) -> Connection:
+def get_connection(store_settings: dict = {}) -> Connection:
     """
     get an objectsctore connection
     """
@@ -99,18 +99,18 @@ def get_connection(store_settings: dict={}) -> Connection:
 def get_full_container_list(conn, container, **kwargs) -> list:
     limit = 10000
     kwargs['limit'] = limit
-    page = []
 
-    _, page = conn.get_container(container, **kwargs)
-    lastpage = page
-    for object_info in lastpage:
+    # fetch first limit number of objects
+    _, objects = conn.get_container(container, **kwargs)
+    for object_info in objects:
         yield object_info
 
-    while len(lastpage) == limit:
-        # keep getting pages..
-        kwargs['marker'] = lastpage['name']
-        _, lastpage = conn.get_container(container, **kwargs)
-        for object_info in lastpage:
+    # continue to fetch next limit number of objects
+    # until all objects will be fetched
+    while len(objects) == limit:
+        kwargs['marker'] = objects[-1]['name']
+        _, objects = conn.get_container(container, **kwargs)
+        for object_info in objects:
             yield object_info
 
 

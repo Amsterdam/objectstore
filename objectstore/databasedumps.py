@@ -75,7 +75,7 @@ def return_file_objects(connection, container, prefix='database'):
     env = ENV.upper()
 
     for o_info in meta_data:
-        expected_file = f'database.{ENV}'
+        expected_file = f'database.{env}'
         if o_info['name'].startswith(expected_file):
             dt = dateparser.parse(o_info['last_modified'])
             now = datetime.datetime.now()
@@ -112,7 +112,7 @@ def remove_old_dumps(connection, container: str, days=None):
             objectstore.delete_object(connection, container, o_info)
 
 
-def download_database(connection, container: str, target: str=""):
+def download_database(connection, container: str, target: str = ""):
     """
     Download database dump
     """

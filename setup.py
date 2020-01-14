@@ -39,6 +39,7 @@ version = '2019.04.08'
 packages = ['objectstore']
 
 requires = [
+    'python-dateutil',
     'python-swiftclient',
     'datapunt-config-loader',
     'python-keystoneclient',
