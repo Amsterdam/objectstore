@@ -33,14 +33,15 @@ give example config:
 
 """
 
+import hmac
 import logging
 import os
-# import pprint
+from hashlib import sha1
+from time import time
 
 from swiftclient.client import Connection
 
 LOG = logging.getLogger('objectstore')
-
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -66,7 +67,7 @@ def make_config_from_env():
 
 def get_connection(store_settings: dict = {}) -> Connection:
     """
-    get an objectsctore connection
+    get an objectstore connection
     """
     store = store_settings
 
@@ -138,6 +139,28 @@ def put_object(
     connection.put_object(
         container, object_name, contents=contents,
         content_type=content_type)
+
+
+def create_temp_url(connection, container: str, file_name: str, temp_url_key, expiry_minutes=0, expiry_hours=0,
+                    expiry_days=0):
+    """
+    Returns an url for users to temporarily access an object without further authentication
+    """
+    # Create signature body
+    method = 'GET'
+    duration_in_seconds = ((((expiry_days * 24) + expiry_hours) * 60) + expiry_minutes) * 60
+    expires = int(time() + duration_in_seconds)
+    path = os.path.join(f'/{container}', file_name)
+    hmac_body = f'{method}\n{expires}\n{path}'.encode('utf-8')
+
+    # Create signature
+    key = bytes(temp_url_key, 'UTF-8')
+    sig = hmac.new(key, hmac_body, sha1).hexdigest()
+
+    # Create url
+    tenant_id = connection.os_options['tenant_id']
+    url = f'https://{tenant_id}.objectstore.eu{path}?temp_url_sig={sig}&temp_url_expires={expires}'
+    return url
 
 
 def delete_object(connection, container: str, object_meta_data: dict) -> None:

@@ -13,5 +13,6 @@ build:
 
 test:
 	$(PYTHON) setup.py test
+
 clean:
 	rm -rf dist/*
