@@ -34,7 +34,7 @@ GitHub <https://github.com/Amsterdam/objectstore>`_ or file an issue at its
 
 .. code-block:: bash
 
-    $ pip install --upgrade setuptools
+    $ pip install --upgrade setuptools wheel
     $ python setup.py install develop
 
 The `setuptools` pakage must be upgraded (as shown above) because the version
